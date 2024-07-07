@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/back_guard.dart';
 
 part 'animated_navbar.dart';
 
@@ -338,7 +339,22 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return BackGuard(
+        snackBar: const SnackBar(
+          dismissDirection: DismissDirection.none,
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(4),
+              topRight: Radius.circular(4),
+            ),
+          ),
+          content: Text(
+            "Press again to exit app",
+          ),
+          duration: Duration(seconds: 3),
+          showCloseIcon: true,
+        ),
         onWillPop: () async {
           final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
               behavior: widget.backButtonBehavior);
