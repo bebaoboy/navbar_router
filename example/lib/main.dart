@@ -182,6 +182,27 @@ class _HomePageState extends ConsumerState<HomePage> {
           )),
     ];
     return Scaffold(
+      // Test back gesture with drawer
+      drawer: Drawer(
+        key: const Key("Drawer"),
+        child: Center(
+            child: TextButton(
+                child: const Text("Test Bottom Sheet"),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (context) {
+                      return Container();
+                    },
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                  );
+                })),
+      ),
       resizeToAvoidBottomInset: false,
       floatingActionButton: AnimatedBuilder(
           animation: NavbarNotifier(),
@@ -253,11 +274,17 @@ class _HomePageState extends ConsumerState<HomePage> {
               NavbarNotifier.hideSnackBar(context);
               return isExitingApp;
             } else {
-              final state = Scaffold.of(context);
+              // For some reason, on flutter 3.22.0 it reports an error here.
+              /* FlutterError (Scaffold.of() called with a context that does not contain a Scaffold.
+                No Scaffold ancestor could be found starting from the context that was passed to Scaffold.of(). This u
+              */
+
+              // final state = Scaffold.of(context);
               NavbarNotifier.showSnackBar(
                 context,
                 "Tap back button again to exit",
-                bottom: state.hasFloatingActionButton ? 0 : kNavbarHeight,
+                bottom: 0
+                // bottom: state.hasFloatingActionButton ? 0 : kNavbarHeight,
               );
               return false;
             }
@@ -418,6 +445,7 @@ class FeedTile extends StatelessWidget {
                 child: Text(
                   placeHolderText.substring(0, 200),
                   textAlign: TextAlign.justify,
+                  overflow: TextOverflow.ellipsis,
                 ))
           ],
         ),
